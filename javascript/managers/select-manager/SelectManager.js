@@ -78,7 +78,7 @@ export default class SelectManager {
 
     /**
      * Put options into select
-     * @param _options {Object}
+     * @param _options {Object} example: ["Australia","Canada","Denmark","India","Iran","New Zealand","Norway","Ukraine"]
      */
     put_options(_options) {
         // Clear all select options

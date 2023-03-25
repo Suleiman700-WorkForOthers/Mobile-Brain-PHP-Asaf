@@ -1,5 +1,6 @@
 <?php
 
+// Require the database connection
 require_once '../config/connection.php';
 
 // Retrieve data from the third-party API
@@ -12,19 +13,19 @@ if (!isset($data['results'])) {
     exit();
 }
 
-
 // Build multi-row INSERT statement
 $insertQuery = "INSERT INTO users (name, age, country, email, profile_pic) VALUES ";
 
-// Iterate on users and build the SQL query
+// Iterate over each user and build the SQL query
 foreach ($data['results'] as $user) {
-    // mysqli_real_escape_string used to:
+    // Escape each value using mysqli_real_escape_string to prevent SQL injection attacks
     $name = mysqli_real_escape_string($conn, $user['name']['first'] . ' ' . $user['name']['last']);
     $age = mysqli_real_escape_string($conn, $user['dob']['age']);
     $country = mysqli_real_escape_string($conn, $user['location']['country']);
     $email = mysqli_real_escape_string($conn, $user['email']);
     $profile_pic = mysqli_real_escape_string($conn, $user['picture']['large']);
 
+    // Add the user's values to the multi-row insert statement
     $insertQuery .= "('$name', $age, '$country', '$email', '$profile_pic'),";
 }
 

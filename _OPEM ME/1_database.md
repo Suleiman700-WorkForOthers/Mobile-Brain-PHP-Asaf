@@ -15,6 +15,8 @@ CREATE INDEX idx_age ON users (age);
 CREATE INDEX idx_country ON users (country);
 ```
 
+database and table creation can be used by opening file `0_database.sql`
+
 ---
 
 ### `id` column

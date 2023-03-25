@@ -1,21 +1,21 @@
-
-// data
-import DataCountries from './data/DataCountries.js';
-
-// selects
+// Import selectCountry module that provides a helper method to handle country select element
 import selectCountry from './search/selects/select-country.js';
 
-// search
+// Import Search module that provides a search functionality
 import Search from './search/Search.js';
 
-// tables
+// Import UsersTable module that provides a table component to display the search results
 import UsersTable from './tables/UsersTable.js';
-UsersTable.showInitRow()
 
-// requests
+// Show initial row of the table
+UsersTable.showInitRow();
+
+// Import RequestGet module that provides helper method to send GET requests
 import RequestGet from '../../../../javascript/requests/RequestGet.js';
 
+// Define an asynchronous function to prepare the page
 async function preparePage() {
+    // Show a loading dialog box
     Swal.fire({
         icon: 'info',
         title: 'Please Wait...',
@@ -24,66 +24,67 @@ async function preparePage() {
         allowOutsideClick: false
     });
 
-    // fetch data from server
-    const response = await RequestGet.send('./php/file.php', {}, 'fetchInitData')
+    // Send a GET request to fetch initial data from the server
+    const response = await RequestGet.send('./php/file.php', {}, 'fetchInitData');
+
     /*
-        Example of response:
+    Example of response:
 
-        {
-            "state": true,
-            "countries": {
-                "dataFound": true,
-                "data": ["Australia","Canada","Denmark","India","Iran","New Zealand","Norway","Ukraine"],
-                "errors": []
-            },
-            "countUsers": {
-                "dataFound": true,
-                "totalUsers": "10",
-                "teenagerUsers": "0",
-                "errors": []
-            }
+    {
+        "state": true,
+        "countries": {
+            "dataFound": true,
+            "data": ["Australia","Canada","Denmark","India","Iran","New Zealand","Norway","Ukraine"],
+            "errors": []
+        },
+        "countUsers": {
+            "dataFound": true,
+            "totalUsers": "10",
+            "teenagerUsers": "0",
+            "errors": []
         }
-     */
+    }
+    */
 
-    // fake request timer
+    // Fake request timer to simulate server response time
     setTimeout(() => {
-        Swal.close()
-    }, 500)
+        Swal.close();
+    }, 500);
 
-    // check if response succeeded
+    // Check if the response was successful
     if (response['state']) {
-        // check counties from response
+        // Check if countries data was found in the response
         if (response['countries']['dataFound']) {
-            // get counties from response
-            const countries = response['countries']['data']
+            // Get the countries array from the response, example: ["Australia","Canada","Denmark","India","Iran","New Zealand","Norway","Ukraine"]
+            const countries = response['countries']['data'];
 
-            // add counties as options to the select
-            selectCountry.put_options(countries)
+            // Add the countries as options to the select element
+            selectCountry.put_options(countries);
         }
 
-        // check count of users from response
+        // Check if user count data was found in the response
         if (response['countUsers']['dataFound']) {
-            // update users count labels
-            document.querySelector('#count-users').innerText = response['countUsers']['totalUsers']
-            document.querySelector('#count-teenager-users').innerText = response['countUsers']['teenagerUsers']
+            // Update the user count labels
+            document.querySelector('#count-users').innerText = response['countUsers']['totalUsers'];
+            document.querySelector('#count-teenager-users').innerText = response['countUsers']['teenagerUsers'];
         }
     }
     else {
-        // show errors from response
+        // Show error messages from the response
         Swal.fire({
             icon: 'error',
             title: 'Ops...',
-            html:
-                response['errors'].map(error => {
-                    return `
-                            <div>
-                                <h6>${error['error']}</h6>
-                                <h6>Error Code: ${error['errorCode']}</h6>
-                            </div>
-                        `;
-                }).join('')
-        })
+            html: response['errors']
+                .map(
+                    (error) =>
+                        `<div>
+                            <h6>${error['error']}</h6>
+                            <h6>Error Code: ${error['errorCode']}</h6>
+                          </div>`
+                ).join('')
+        });
     }
 }
 
-await preparePage()
+// Call the preparePage function to initialize the page
+await preparePage();
